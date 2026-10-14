@@ -1,0 +1,1133 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>For Mas Ricky 🤍</title>
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@500;600;700&family=Fredoka:wght@400;500;600&family=Quicksand:wght@500;600;700&display=swap" rel="stylesheet">
+    <!-- Canvas Confetti CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+    <style>
+        :root {
+            --bg-lemon: #FFFACD;
+            --text-brown: #5c4033;
+            --accent-cream: #FFFFCC;
+            --accent-butter: #FFFD74;
+            --accent-gold: #DAA520;
+            --shadow-soft: rgba(92, 64, 51, 0.12);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            user-select: none;
+            -webkit-user-select: none;
+        }
+
+        body {
+            background-color: var(--bg-lemon);
+            color: var(--text-brown);
+            font-family: 'Fredoka', cursive, sans-serif;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow-x: hidden;
+            position: relative;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 520px;
+            min-height: 100vh;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            position: relative;
+        }
+
+        .page {
+            display: none;
+            width: 100%;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            animation: fadeIn 0.4s ease-in-out forwards;
+        }
+
+        .page.active {
+            display: flex;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        h1, h2 {
+            font-family: 'Caveat', cursive;
+            color: var(--text-brown);
+            margin-bottom: 8px;
+        }
+
+        h1 { font-size: 2.6rem; }
+        h2 { font-size: 2.2rem; }
+
+        p {
+            font-family: 'Quicksand', sans-serif;
+            font-size: 0.9rem;
+            line-height: 1.5;
+            color: var(--text-brown);
+            margin-bottom: 10px;
+        }
+
+        /* Cute Music Button */
+        .music-btn {
+            position: fixed;
+            top: 15px;
+            right: 15px;
+            background: #FFFFFF;
+            border: 2px solid var(--accent-gold);
+            padding: 8px 16px;
+            border-radius: 25px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            cursor: pointer;
+            box-shadow: 0 4px 12px var(--shadow-soft);
+            z-index: 100;
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: var(--text-brown);
+        }
+
+        .btn-custom {
+            background: linear-gradient(135deg, #FFF8DC, var(--accent-butter));
+            color: var(--text-brown);
+            border: 2px solid var(--accent-gold);
+            padding: 10px 24px;
+            border-radius: 25px;
+            font-family: 'Fredoka', cursive;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            box-shadow: 0 4px 12px var(--shadow-soft);
+            transition: all 0.2s ease;
+            margin-top: 15px;
+            margin-bottom: 25px;
+        }
+
+        .btn-custom:hover {
+            transform: translateY(-2px);
+            background: var(--accent-butter);
+        }
+
+        /* Page 1: Landing */
+        .landing-card {
+            background: #FFFFFF;
+            padding: 35px 25px;
+            border-radius: 24px;
+            box-shadow: 0 8px 24px var(--shadow-soft);
+            border: 2px dashed var(--accent-gold);
+            width: 100%;
+        }
+
+        /* Page 2: Loading */
+        .progress-container {
+            width: 80%;
+            height: 16px;
+            background: #FFFFFF;
+            border-radius: 10px;
+            border: 2px solid var(--accent-gold);
+            overflow: hidden;
+            margin: 20px 0;
+        }
+
+        .progress-bar {
+            width: 0%;
+            height: 100%;
+            background: var(--accent-gold);
+            transition: width 0.3s ease;
+        }
+
+        /* Page 3: Pat-Pat Flow */
+        .pat-area {
+            position: relative;
+            width: 330px;
+            height: 330px;
+            margin: 10px 0;
+            cursor: ew-resize;
+            touch-action: none;
+        }
+
+        .pat-img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+            border-radius: 24px;
+            pointer-events: none;
+        }
+
+        .swipe-guide {
+            position: absolute;
+            top: 30%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: rgba(255, 255, 255, 0.95);
+            border: 2px solid var(--accent-gold);
+            padding: 8px 18px;
+            border-radius: 20px;
+            font-size: 1.2rem;
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.15);
+            animation: swipePulse 1.2s infinite ease-in-out;
+            pointer-events: none;
+            z-index: 10;
+        }
+
+        @keyframes swipePulse {
+            0%, 100% { transform: translate(-50%, -50%) scale(1); }
+            50% { transform: translate(-50%, -50%) scale(1.08); }
+        }
+
+        .bubble-text {
+            background: #FFFFFF;
+            border: 2px solid var(--accent-gold);
+            padding: 10px 20px;
+            border-radius: 18px;
+            font-size: 1.05rem;
+            margin-bottom: 8px;
+            box-shadow: 0 4px 12px var(--shadow-soft);
+        }
+
+        /* Page 4: Word Search Scrollable with Hint Above Grid */
+        .ws-scroll-wrapper {
+            width: 100%;
+            max-height: 85vh;
+            overflow-y: auto;
+            padding: 10px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            position: relative;
+        }
+
+        .ws-message-box {
+            background: #FFFFF0;
+            padding: 14px 16px;
+            border-radius: 16px;
+            border: 2px dashed var(--accent-gold);
+            font-size: 0.88rem;
+            line-height: 1.5;
+            margin-bottom: 12px;
+            text-align: left;
+            box-shadow: 0 4px 12px var(--shadow-soft);
+            width: 100%;
+        }
+
+        .word-list {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 6px;
+            margin-bottom: 12px;
+            font-family: 'Fredoka', cursive;
+            font-size: 0.8rem;
+        }
+
+        .word-item {
+            background: #FFFFFF;
+            padding: 3px 8px;
+            border-radius: 10px;
+            border: 1px solid var(--accent-gold);
+            color: var(--text-brown);
+            font-weight: 600;
+        }
+
+        .word-item.completed {
+            background: #90EE90;
+            text-decoration: line-through;
+            color: #333;
+        }
+
+        .ws-grid-header {
+            width: 100%;
+            max-width: 360px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 4px;
+            padding: 0 4px;
+        }
+
+        .ws-grid-title {
+            font-size: 1rem;
+            font-weight: 600;
+            color: var(--text-brown);
+        }
+
+        .hint-btn {
+            background: #FFF8DC;
+            border: 1.5px solid var(--accent-gold);
+            padding: 4px 10px;
+            border-radius: 14px;
+            font-size: 0.78rem;
+            cursor: pointer;
+            font-weight: 600;
+            box-shadow: 0 2px 6px var(--shadow-soft);
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .ws-grid {
+            display: grid;
+            grid-template-columns: repeat(12, 1fr);
+            gap: 2px;
+            background: #FFFFFF;
+            padding: 6px;
+            border-radius: 16px;
+            border: 2px solid var(--accent-gold);
+            margin: 4px 0 10px 0;
+            touch-action: none;
+            user-select: none;
+        }
+
+        .ws-cell {
+            width: 27px;
+            height: 27px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-weight: bold;
+            font-size: 0.75rem;
+            border-radius: 4px;
+            background: #FFF8DC;
+            cursor: pointer;
+            transition: background 0.15s;
+        }
+
+        .ws-cell.selecting {
+            background: var(--accent-butter);
+            border: 1px solid var(--accent-gold);
+        }
+
+        .ws-cell.found {
+            background: #FFB6C1 !important;
+            color: #5c4033;
+        }
+
+        .ws-cell.hint-reveal {
+            background: #FFD700 !important;
+            border: 1.5px solid #DAA520;
+            box-shadow: 0 0 6px #FFD700;
+        }
+
+        /* Page 5: Story (When Our Story Began) */
+        .story-container {
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .story-card {
+            background: #FFFFFF;
+            padding: 12px;
+            border-radius: 16px;
+            box-shadow: 0 4px 12px var(--shadow-soft);
+            border: 1px solid #FFE4B5;
+        }
+
+        .story-card img {
+            width: 100%;
+            border-radius: 10px;
+            margin-bottom: 8px;
+        }
+
+        .sub-photos {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+        }
+
+        /* Page 6: Doodle Paper 50 Reasons (Auto-checked) */
+        .doodle-paper-scroll {
+            width: 100%;
+            max-height: 85vh;
+            overflow-y: auto;
+            padding: 10px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .doodle-paper {
+            background: #FFFFFF;
+            width: 100%;
+            border-radius: 18px;
+            padding: 25px 20px;
+            box-shadow: 0 8px 24px var(--shadow-soft);
+            border: 2px solid #222222;
+            font-family: 'Caveat', cursive;
+            color: #222222;
+            text-align: left;
+            position: relative;
+            background-image: radial-gradient(#E5E5E5 1px, transparent 1px);
+            background-size: 16px 16px;
+        }
+
+        .doodle-title {
+            font-size: 2.5rem;
+            font-weight: 700;
+            text-align: center;
+            margin-bottom: 2px;
+        }
+
+        .wavy-underline {
+            width: 100%;
+            height: 12px;
+            margin-bottom: 15px;
+        }
+
+        .doodle-checklist {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        .doodle-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-size: 1.35rem;
+            font-weight: 600;
+            padding: 4px 0;
+            border-bottom: 1px dashed #eee;
+        }
+
+        .doodle-checkbox {
+            width: 24px;
+            height: 24px;
+            min-width: 24px;
+            border: 2px solid #222;
+            border-radius: 5px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+            font-weight: bold;
+            background: #333;
+            color: #FFF;
+        }
+
+        .doodle-decor-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 20px;
+            border-top: 2px solid #222;
+            padding-top: 15px;
+        }
+
+        .doodle-footer-text {
+            font-size: 1.2rem;
+            text-align: center;
+            margin-top: 15px;
+            font-style: italic;
+            color: #555;
+        }
+
+        /* Page 7: PIN Unlock (Before Open Letters) */
+        .pin-inputs {
+            display: flex;
+            gap: 8px;
+            justify-content: center;
+            margin: 20px 0;
+        }
+
+        .pin-box {
+            width: 42px;
+            height: 52px;
+            text-align: center;
+            font-size: 1.5rem;
+            font-weight: bold;
+            border: 2px solid var(--accent-gold);
+            border-radius: 12px;
+            background: #FFFFFF;
+            color: var(--text-brown);
+        }
+
+        /* Page 8: Open Letters */
+        .letters-container {
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+            justify-content: center;
+            gap: 20px;
+            width: 100%;
+            margin-top: 10px;
+        }
+
+        .envelopes-side {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            flex: 1;
+        }
+
+        .envelope-btn {
+            background: #FFFFFF;
+            border: 2px solid var(--accent-gold);
+            padding: 18px 12px;
+            border-radius: 18px;
+            cursor: pointer;
+            box-shadow: 0 4px 12px var(--shadow-soft);
+            transition: transform 0.2s ease;
+            text-align: center;
+        }
+
+        .envelope-btn:hover {
+            transform: scale(1.04);
+        }
+
+        .polaroid-right {
+            flex: 1.2;
+            background: #FFFFFF;
+            padding: 12px 12px 28px 12px;
+            border-radius: 12px;
+            box-shadow: 0 8px 20px var(--shadow-soft);
+            transform: rotate(3deg);
+            width: 100%;
+        }
+
+        .polaroid-right img {
+            width: 100%;
+            border-radius: 6px;
+            display: block;
+        }
+
+        /* Modal Surat */
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.5);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .modal-content {
+            background: #FFFDF0;
+            border: 2px solid var(--accent-gold);
+            border-radius: 20px;
+            padding: 25px 20px;
+            max-width: 460px;
+            max-height: 80vh;
+            overflow-y: auto;
+            position: relative;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+            text-align: left;
+        }
+
+        .modal-close {
+            position: absolute;
+            top: 10px;
+            right: 15px;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: var(--text-brown);
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Audio Elements -->
+    <audio id="bgm" loop src="lagu.mp3"></audio>
+    <audio id="sfx-woah" src="woah.mp3"></audio>
+
+    <!-- Music Control Button -->
+    <div class="music-btn" onclick="toggleAudio()">
+        <span id="music-icon">🎵</span>
+        <span id="music-status">Play Music</span>
+    </div>
+
+    <div class="container">
+
+        <!-- Page 1: Landing Page -->
+        <div id="page-1" class="page active">
+            <div class="landing-card">
+                <h1>Hi, Mas Ricky! 🤍</h1>
+                <p>A little interactive gift made with so much love for you.</p>
+                <button class="btn-custom" onclick="goToPage(2); startLoading();">Start Game 🤍</button>
+            </div>
+        </div>
+
+        <!-- Page 2: Loading Screen -->
+        <div id="page-2" class="page">
+            <h2>Preparing Your Surprise...</h2>
+            <div class="progress-container">
+                <div id="p-bar" class="progress-bar"></div>
+            </div>
+            <p id="loading-text">Sending love to Ricky...</p>
+        </div>
+
+        <!-- Page 3: Cooking Mama Pat-Pat Flow -->
+        <div id="page-3" class="page">
+            <div id="bubble" class="bubble-text">hmmm bete nih... 🥺</div>
+            <div class="pat-area" id="pat-area">
+                <img id="pat-img" class="pat-img" src="karikatur1.png" alt="Karikatur">
+                <div id="swipe-guide" class="swipe-guide" style="display:none;"><span>↔️</span> Gesek Rambutnya!</div>
+            </div>
+            <p id="pat-count-text">Klik dulu karikaturnya!</p>
+            <button id="btn-pat-next" class="btn-custom" style="display:none;" onclick="goToPage(4)">Lanjut ✨</button>
+        </div>
+
+        <!-- Page 4: Word Search Scrollable with Hint Above Grid -->
+        <div id="page-4" class="page">
+            <div class="ws-scroll-wrapper">
+                <h2>Find The Hidden Words 🧩</h2>
+                <div class="ws-message-box">
+                    Mas, I still look back and marvel at how the universe brought us together. At first, I was simply looking for someone to talk to while carrying the weight of a broken heart, never expecting to find a <b>HEAVEN</b> in your presence. But your charm, endless patience, and gentle soul became the most natural <b>REMEDY</b> I could have ever asked for. Almost effortlessly, my heart found its home in you. It feels like the universe knew you were the exact <b>GUIDE</b> I needed to overcome the pain and grow. Thank you for staying by my side, for being my greatest <b>MIRACLE</b>, and for turning my world around with so much <b>LOVE</b>. I feel truly <b>BLESSED</b> to share this path with you, and I want nothing more than to <b>TREASURE</b> every single moment. Happy anniversary, my love—with you, my heart is finally <b>SERENE</b>.
+                </div>
+                <div class="word-list" id="word-list">
+                    <span class="word-item" id="w-HEAVEN">HEAVEN</span>
+                    <span class="word-item" id="w-REMEDY">REMEDY</span>
+                    <span class="word-item" id="w-GUIDE">GUIDE</span>
+                    <span class="word-item" id="w-MIRACLE">MIRACLE</span>
+                    <span class="word-item" id="w-LOVE">LOVE</span>
+                    <span class="word-item" id="w-BLESSED">BLESSED</span>
+                    <span class="word-item" id="w-TREASURE">TREASURE</span>
+                    <span class="word-item" id="w-SERENE">SERENE</span>
+                </div>
+                <!-- Hint tepat di atas kotak huruf acak -->
+                <div class="ws-grid-header">
+                    <span class="ws-grid-title">Papan Huruf</span>
+                    <button class="hint-btn" id="hint-btn" onclick="useHint()">🔍 Hint (5)</button>
+                </div>
+                <div id="ws-grid" class="ws-grid"></div>
+                <button id="btn-ws-next" class="btn-custom" style="display:none;" onclick="goToPage(5)">Unlock Secret 🔒</button>
+            </div>
+        </div>
+
+        <!-- Page 5: When Our Story Began -->
+        <div id="page-5" class="page">
+            <h2>When Our Story Began 📸</h2>
+            <div class="story-container">
+                <div class="story-card">
+                    <img src="foto-utama.jpg" alt="Foto Utama">
+                    <p><b>"Dari sekian banyak hal di dunia, genggaman tangan dan senyuman ini selalu jadi tempat paling tenang buat pulang"</b></p>
+                </div>
+                <div class="sub-photos">
+                    <div class="story-card">
+                        <img src="foto-nembak.jpg" alt="Foto Jadian">
+                        <p style="font-size: 0.72rem;">The day you asked me to be yours. A simple message that changed my whole world 🤍</p>
+                    </div>
+                    <div class="story-card">
+                        <img src="foto-ngelamar.jpg" alt="Foto Lamaran">
+                        <p style="font-size: 0.72rem;">‘You’ve become my peace, my support, and my greatest blessing.’ Janji manis yang akan selalu ku usahakan hingga akhir sebagai bentuk cintaku,</p>
+                    </div>
+                </div>
+            </div>
+            <button class="btn-custom" onclick="goToPage(6)" style="margin-top:15px;">50 Reasons Why I Love You 📝</button>
+        </div>
+
+        <!-- Page 6: 50 Reasons Full Checkboxes (Auto-checked) -->
+        <div id="page-6" class="page">
+            <div class="doodle-paper-scroll">
+                <div class="doodle-paper">
+                    <div class="doodle-title">Reason why I love you !!!</div>
+                    <svg class="wavy-underline" viewBox="0 0 300 12" fill="none" stroke="#222" stroke-width="2">
+                        <path d="M0 6 Q 15 0, 30 6 T 60 6 T 90 6 T 120 6 T 150 6 T 180 6 T 210 6 T 240 6 T 270 6 T 300 6" />
+                    </svg>
+
+                    <div class="doodle-checklist" id="doodle-checklist-box"></div>
+
+                    <div class="doodle-decor-row">
+                        <!-- Amplop Doodle -->
+                        <svg width="85" height="65" viewBox="0 0 100 80" fill="none" stroke="#222" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <rect x="5" y="20" width="65" height="45" rx="3" fill="#FFF"/>
+                            <path d="M5 20 L37 45 L70 20" />
+                            <rect x="35" y="5" width="55" height="50" rx="3" transform="rotate(8 35 5)" fill="#FFF"/>
+                            <path d="M38 8 L85 18" />
+                            <text x="42" y="24" font-family="Caveat" font-size="10" fill="#222" transform="rotate(8 35 5)">i'm so lucky</text>
+                            <text x="40" y="36" font-family="Caveat" font-size="10" fill="#222" transform="rotate(8 35 5)">to meet you! ♡</text>
+                        </svg>
+
+                        <!-- Teks Tengah -->
+                        <div style="text-align:center;">
+                            <div style="font-size: 2rem; font-weight:700; line-height:1.1;">I Love you<br>Ricky !!! ♡</div>
+                        </div>
+
+                        <!-- Doodle Hati & Catatan -->
+                        <svg width="60" height="70" viewBox="0 0 60 70" fill="none" stroke="#222" stroke-width="2" stroke-linecap="round">
+                            <path d="M30 50 Q10 30 15 15 A12 12 0 0 1 30 20 A12 12 0 0 1 45 15 Q50 30 30 50 Z" fill="#FFF"/>
+                            <text x="10" y="65" font-family="Caveat" font-size="12" fill="#222">Forever &lt;3</text>
+                        </svg>
+                    </div>
+
+                    <div class="doodle-footer-text">there's many reason but i cant write all of them</div>
+                </div>
+
+                <button class="btn-custom" onclick="goToPage(7)" style="margin-top:15px;">Next: Enter PIN 🔑</button>
+            </div>
+        </div>
+
+        <!-- Page 7: PIN Unlock (Before Open Letters) -->
+        <div id="page-7" class="page">
+            <h2>Enter Secret PIN 🔑</h2>
+            <p>Clue: Tanggal jadian kita 🤍</p>
+            <div class="pin-inputs">
+                <input type="password" maxlength="1" class="pin-box" oninput="movePin(this, 0)">
+                <input type="password" maxlength="1" class="pin-box" oninput="movePin(this, 1)">
+                <input type="password" maxlength="1" class="pin-box" oninput="movePin(this, 2)">
+                <input type="password" maxlength="1" class="pin-box" oninput="movePin(this, 3)">
+                <input type="password" maxlength="1" class="pin-box" oninput="movePin(this, 4)">
+                <input type="password" maxlength="1" class="pin-box" oninput="movePin(this, 5)">
+            </div>
+            <button class="btn-custom" onclick="checkPin()">Submit PIN</button>
+        </div>
+
+        <!-- Page 8: Open Letters (Large Photo Right) -->
+        <div id="page-8" class="page">
+            <h2>Open Letters ✉️</h2>
+            <div class="letters-container">
+                <div class="envelopes-side">
+                    <div class="envelope-btn" onclick="openLetter(1)">
+                        <span style="font-size:2.2rem;">💌</span>
+                        <p style="font-weight:bold; margin-top:5px; font-size:0.9rem;">About You</p>
+                    </div>
+                    <div class="envelope-btn" onclick="openLetter(2)">
+                        <span style="font-size:2.2rem;">✉️</span>
+                        <p style="font-weight:bold; margin-top:5px; font-size:0.9rem;">Our Journey</p>
+                    </div>
+                </div>
+
+                <div class="polaroid-right">
+                    <img src="foto-polaroid.jpg" alt="Polaroid Memory">
+                    <p style="font-family:'Caveat'; font-size:1.4rem; margin-top:8px; margin-bottom:0; text-align:center;">Us Forever 🤍</p>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- Modal Surat -->
+    <div id="letter-modal" class="modal-overlay">
+        <div class="modal-content">
+            <span class="modal-close" onclick="closeLetter()">&times;</span>
+            <h2 id="modal-title" style="margin-bottom:10px;">Title</h2>
+            <p id="modal-body" style="white-space: pre-line; font-size: 0.9rem; line-height: 1.7;"></p>
+        </div>
+    </div>
+
+    <script>
+        // Audio Management
+        const bgm = document.getElementById('bgm');
+        const sfxWoah = document.getElementById('sfx-woah');
+        let isPlaying = false;
+
+        function toggleAudio() {
+            if (isPlaying) {
+                bgm.pause();
+                document.getElementById('music-status').innerText = "Play Music";
+            } else {
+                bgm.play();
+                document.getElementById('music-status').innerText = "Pause Music";
+            }
+            isPlaying = !isPlaying;
+        }
+
+        function playDuckedSFX() {
+            bgm.volume = 0.2;
+            sfxWoah.play();
+            sfxWoah.onended = () => { bgm.volume = 1.0; };
+        }
+
+        function goToPage(pageNum) {
+            document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+            document.getElementById(`page-${pageNum}`).classList.add('active');
+            window.scrollTo(0, 0);
+        }
+
+        // Loading Screen
+        function startLoading() {
+            if(!isPlaying) toggleAudio();
+            let bar = document.getElementById('p-bar');
+            let text = document.getElementById('loading-text');
+            let width = 0;
+            let interval = setInterval(() => {
+                width += 2;
+                bar.style.width = width + '%';
+                if(width === 30) text.innerText = "Collecting data...";
+                if(width === 70) text.innerText = "Preparing surprise...";
+                if(width >= 100) {
+                    clearInterval(interval);
+                    goToPage(3);
+                }
+            }, 50);
+        }
+
+        // Pat-Pat Step-by-Step Flow (Strict 5x Swipes per Session)
+        let patStep = 1;
+        let currentSession = 1;
+        let swipeCount = 0;
+        let lastX = 0;
+        let isSwiping = false;
+
+        const patArea = document.getElementById('pat-area');
+        const patImg = document.getElementById('pat-img');
+        const bubble = document.getElementById('bubble');
+        const swipeGuide = document.getElementById('swipe-guide');
+        const patCountText = document.getElementById('pat-count-text');
+
+        patArea.addEventListener('click', () => {
+            if(patStep === 1) {
+                patStep = 2;
+                patImg.src = 'karikatur2.png';
+                bubble.innerText = "hmmm bete nih... gesek rambutku dong! 🥺";
+                patCountText.innerText = `Sesi ${currentSession}/3 (Gesek: 0/5)`;
+                swipeGuide.style.display = 'flex';
+            }
+        });
+
+        const startSwipe = (e) => {
+            if(patStep !== 2) return;
+            isSwiping = true;
+            lastX = e.clientX || (e.touches && e.touches[0].clientX) || 0;
+            if(swipeGuide) swipeGuide.style.display = 'none';
+        };
+
+        const moveSwipe = (e) => {
+            if(!isSwiping || patStep !== 2) return;
+            let currentX = e.clientX || (e.touches && e.touches[0].clientX) || 0;
+            let diff = currentX - lastX;
+
+            if(Math.abs(diff) > 50) {
+                swipeCount++;
+                lastX = currentX;
+                patCountText.innerText = `Sesi ${currentSession}/3 (Gesek: ${swipeCount}/5)`;
+
+                patImg.src = 'karikatur2.png';
+
+                if(swipeCount >= 5) {
+                    isSwiping = false;
+                    currentSession++;
+                    swipeCount = 0;
+
+                    if(currentSession <= 3) {
+                        bubble.innerText = "LAGIIIIIII 🥺";
+                        patImg.src = 'karikatur2.png';
+                        patCountText.innerText = `Sesi ${currentSession}/3 (Gesek: 0/5)`;
+                        if(swipeGuide) swipeGuide.style.display = 'flex';
+                    } else {
+                        patStep = 3;
+                        patImg.src = 'karikatur3.png';
+                        bubble.innerText = "Yeay! Makasih mas! 🥰";
+                        patCountText.innerText = "Sempurna! ✨";
+                        document.getElementById('btn-pat-next').style.display = 'inline-block';
+                        if(swipeGuide) swipeGuide.style.display = 'none';
+                        confetti({ particleCount: 100, spread: 70, origin: { y: 0.6 } });
+                        playDuckedSFX();
+                    }
+                }
+            }
+        };
+
+        const endSwipe = () => { isSwiping = false; };
+
+        patArea.addEventListener('mousedown', startSwipe);
+        patArea.addEventListener('mousemove', moveSwipe);
+        patArea.addEventListener('mouseup', endSwipe);
+        patArea.addEventListener('touchstart', startSwipe);
+        patArea.addEventListener('touchmove', moveSwipe);
+        patArea.addEventListener('touchend', endSwipe);
+
+        // Word Search 12x12 Implementation with Cumulative Hint Feature (5 Hints)
+        const wsWords = ["HEAVEN", "REMEDY", "GUIDE", "MIRACLE", "LOVE", "BLESSED", "TREASURE", "SERENE"];
+        let foundWordsSet = new Set();
+        const size = 12;
+        let grid = Array(size).fill(0).map(() => Array(size).fill(''));
+        let wordPlacements = {};
+        let hintsLeft = 5;
+        let hintStepIndex = 0;
+
+        function placeWords() {
+            const directions = [
+                {r: 0, c: 1, name: 'H'},  
+                {r: 1, c: 0, name: 'V'},  
+                {r: 1, c: 1, name: 'D'}   
+            ];
+
+            wsWords.forEach(word => {
+                let placed = false;
+                while(!placed) {
+                    let dir = directions[Math.floor(Math.random() * directions.length)];
+                    let r = Math.floor(Math.random() * size);
+                    let c = Math.floor(Math.random() * size);
+
+                    if(r + dir.r * (word.length - 1) >= 0 && r + dir.r * (word.length - 1) < size &&
+                       c + dir.c * (word.length - 1) >= 0 && c + dir.c * (word.length - 1) < size) {
+                        let canPlace = true;
+                        for(let i=0; i<word.length; i++) {
+                            let curr = grid[r + dir.r * i][c + dir.c * i];
+                            if(curr !== '' && curr !== word[i]) {
+                                canPlace = false;
+                                break;
+                            }
+                        }
+                        if(canPlace) {
+                            let coords = [];
+                            for(let i=0; i<word.length; i++) {
+                                let cr = r + dir.r * i;
+                                let cc = c + dir.c * i;
+                                grid[cr][cc] = word[i];
+                                coords.push({r: cr, c: cc});
+                            }
+                            wordPlacements[word] = coords;
+                            placed = true;
+                        }
+                    }
+                }
+            });
+
+            const alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+            for(let r=0; r<size; r++) {
+                for(let c=0; c<size; c++) {
+                    if(grid[r][c] === '') {
+                        grid[r][c] = alphabet[Math.floor(Math.random() * alphabet.length)];
+                    }
+                }
+            }
+        }
+        placeWords();
+
+        let selectedCells = [];
+        let isSelecting = false;
+
+        function initWordSearchGrid() {
+            const gridEl = document.getElementById('ws-grid');
+            gridEl.innerHTML = '';
+            for(let r=0; r<size; r++) {
+                for(let c=0; c<size; c++) {
+                    let cell = document.createElement('div');
+                    cell.className = 'ws-cell';
+                    cell.innerText = grid[r][c];
+                    cell.dataset.r = r;
+                    cell.dataset.c = c;
+
+                    cell.addEventListener('mousedown', () => startSelect(cell));
+                    cell.addEventListener('mouseenter', () => continueSelect(cell));
+                    cell.addEventListener('mouseup', endSelect);
+
+                    cell.addEventListener('touchstart', (e) => {
+                        let touch = e.touches[0];
+                        let target = document.elementFromPoint(touch.clientX, touch.clientY);
+                        if(target && target.classList.contains('ws-cell')) startSelect(target);
+                        e.preventDefault();
+                    });
+                    cell.addEventListener('touchmove', (e) => {
+                        let touch = e.touches[0];
+                        let target = document.elementFromPoint(touch.clientX, touch.clientY);
+                        if(target && target.classList.contains('ws-cell')) continueSelect(target);
+                        e.preventDefault();
+                    });
+                    cell.addEventListener('touchend', endSelect);
+
+                    gridEl.appendChild(cell);
+                }
+            }
+        }
+
+        function startSelect(cell) {
+            isSelecting = true;
+            clearSelection();
+            selectedCells.push(cell);
+            cell.classList.add('selecting');
+        }
+
+        function continueSelect(cell) {
+            if(!isSelecting) return;
+            if(!selectedCells.includes(cell)) {
+                selectedCells.push(cell);
+                cell.classList.add('selecting');
+            }
+        }
+
+        function endSelect() {
+            if(!isSelecting) return;
+            isSelecting = false;
+
+            let wordStr = selectedCells.map(cell => cell.innerText).join('');
+            let revWordStr = selectedCells.slice().reverse().map(cell => cell.innerText).join('');
+
+            let matchedWord = null;
+            if(wsWords.includes(wordStr) && !foundWordsSet.has(wordStr)) matchedWord = wordStr;
+            else if(wsWords.includes(revWordStr) && !foundWordsSet.has(revWordStr)) matchedWord = revWordStr;
+
+            if(matchedWord) {
+                foundWordsSet.add(matchedWord);
+                selectedCells.forEach(cell => {
+                    cell.classList.remove('selecting');
+                    cell.classList.add('found');
+                    cell.classList.remove('hint-reveal');
+                });
+                document.getElementById(`w-${matchedWord}`).classList.add('completed');
+                confetti({ particleCount: 30, spread: 50, origin: { y: 0.7 } });
+
+                if(foundWordsSet.size === wsWords.length) {
+                    document.getElementById('btn-ws-next').style.display = 'inline-block';
+                }
+            } else {
+                clearSelection();
+            }
+            selectedCells = [];
+        }
+
+        function clearSelection() {
+            document.querySelectorAll('.ws-cell').forEach(cell => {
+                if(!cell.classList.contains('found')) {
+                    cell.classList.remove('selecting');
+                }
+            });
+        }
+
+        function useHint() {
+            if(hintsLeft <= 0) {
+                alert("Hint sudah habis, mas! Kamu pasti bisa kok mencarinya 🤍");
+                return;
+            }
+            
+            let unfound = wsWords.find(w => !foundWordsSet.has(w));
+            if(!unfound) return;
+
+            let coords = wordPlacements[unfound];
+            if(hintStepIndex >= coords.length) {
+                hintStepIndex = 0;
+            }
+
+            let currentCoord = coords[hintStepIndex];
+            let targetCell = document.querySelector(`.ws-cell[data-r='${currentCoord.r}'][data-c='${currentCoord.c}']`);
+            
+            if(targetCell && !targetCell.classList.contains('found')) {
+                targetCell.classList.add('hint-reveal');
+            }
+
+            hintStepIndex++;
+            hintsLeft--;
+            document.getElementById('hint-btn').innerText = `🔍 Hint (${hintsLeft})`;
+        }
+
+        initWordSearchGrid();
+
+        // PIN Logic
+        const correctPin = "151025";
+        let userPin = ["","","","","",""];
+
+        function movePin(input, index) {
+            userPin[index] = input.value;
+            if(input.value && index < 5) {
+                document.querySelectorAll('.pin-box')[index+1].focus();
+            }
+        }
+
+        function checkPin() {
+            if(userPin.join('') === correctPin) {
+                goToPage(8);
+            } else {
+                alert("PIN salah, coba ingat tanggal jadian kalian 🤍");
+            }
+        }
+
+        // 50 Reasons Full List Data (Auto-checked)
+        const reasons = [
+            "Penyayang dengan hati lembut", "Pemikiran yang dewasa", "Hatinya penyabar dan suka ngalah", 
+            "Bijaksana dalam menilai/memutuskan suatu hal", "Jarang ngomong bahasa kasar/cursing", "Setia ketika udah bener-bener mencintai",
+            "Tulus tanpa meminta imbalan", "Suka anak-anak", "Pandai bergaul dan membawa percakapan", "Pekerja keras",
+            "Dermawan suka berbagi", "Family man yang mengutamakan keluarga", "Bisa ngemong pasangannya dengan baik",
+            "Empatinya tinggi", "Provider yang mengusahakan kebahagiaan orang terkasih", "Mau belajar dari kesalahan masa lalu",
+            "Konsisten buat ngejar apa yang diimpikan", "Agamanya oke", "Nggak berjudi dalam konteks apapun",
+            "Nggak ngutang dalam bentuk apapun", "HE'S SUPER SMART (Sexy brain!)", "Well educated & wawasannya luas",
+            "Fast learner", "DEFINITELY KNOW WHAT HE WANTS!", "SAY NO TO PATRIARCHY", "Nggak boros dan menghargai uang",
+            "Ngga ragu buat minta maaf", "Cinta damai, bikin hidup tenang", "Tau cara memvalidasi perasaan pasangan",
+            "Words of affirmation (Tiada hari tanpa pujian)", "Quality time selalu diprioritaskan", "Jiwa pemimpinnya kuat banget",
+            "Classy but casual", "Tegas banget dan punya power", "Gak pernah ngelarang pasangan", "SUPER SUPPORTIVE!",
+            "He's naughty and flirty (and I love it!)", "Good at playing games", "Nurut banget sama pasangannya",
+            "SUPER GOOD AT ENGLISH!!!!!", "Sporty & rajin jogging", "Jarang jajan sembarangan", "He's a MAN indeed",
+            "Sangat tau cara menghargai orang", "HE'S RICH RICH RICHHHHH", "Mau diajak nyawah & berkebun",
+            "Tau cara menghargai orang lain", "HUMORIS BANGET!", "Seru diajak bergossip (Partner in crime)", "HE'S A MANAGER irl!"
+        ];
+
+        function initReasonsChecklist() {
+            const box = document.getElementById('doodle-checklist-box');
+            box.innerHTML = '';
+            reasons.forEach((text, i) => {
+                let item = document.createElement('div');
+                item.className = 'doodle-item';
+                item.innerHTML = `
+                    <div class="doodle-checkbox">✓</div>
+                    <span>${i+1}. ${text}</span>
+                `;
+                box.appendChild(item);
+            });
+        }
+        initReasonsChecklist();
+
+        // Complete Open Letters Content
+        const letters = {
+            1: {
+                title: "About You 🤍",
+                body: `Melihat perjalanan mas selama setahun kebelakang ini bener-bener bikin adek bangga dan terharu banget. Yes, I'm very proud of you. Adek masih inget banget gimana awalnya mas membangun tembok yang setinggi itu untuk melindungi diri mas sendiri dari trauma dan luka masa lalu yang bikin mas ragu untuk percaya dan membuka hati sepenuhnya.
+
+Tapi pelan-pelan, adek ngelihat sendiri gimana mas berani menghancurkan tembok yang membelenggu itu. Mas belajar untuk terbuka, belajar untuk percaya lagi, dan akhirnya berani mencintai adek dengan begitu tulus dan seutuhnya. Mas mau belajar untuk menurunkan sifat hyper-independence mas, mau berbagi cerita, dan ga lagi memikul semua beban berat sendirian.
+
+Adek ngelihat dan merasakan semua perubahan baik dari mas sekecil apa pun itu. Bukan cuma dalam hubungan kita, tapi gimana mas berproses jadi manusia yang makin hebat di segala sisi; baik dari segi karir, keluarga, pertemanan, sampai cara mas menyelesaikan masalah. You grew so much, mas, and I’ve always appreciated every single step of your journey.
+
+Untuk ketidakkonsistenan yang sesekali muncul, itu hal yang wajar banget, mas. Namanya juga kita masih sama-sama proses belajar, ga ada yang menuntut mas untuk langsung perfect seketika. It’s totally okay to feel crash out, overwhelmed, stumble, or have bad days sometimes. Tapi setelahnya, jangan pernah merasa kalau usaha mas untuk jadi lebih baik itu gagal ya. Nggak sama sekali. Momen capek atau tersandung itu wajar dan manusiawi, tapi bukan berarti proses yang udah mas perjuangkan itu sia-sia. Tetap lanjutkan apa yang udah mas usahakan sebelumnya ya.
+
+Ke depannya, adek mau mas tetap berproses jadi versi terbaik diri mas seperti setahun belakangan ini. With or even without me, adek mau mas tetap yakin dalam hati kalau support dan doa dari adek ga akan pernah berhenti, sekalipun keberadaan adek udah ga di samping mas lagi.
+
+Dukungan adek akan selalu ada di sana, tinggal di hidup mas. Sama seperti sebelum-sebelumnya, percayalah kalau adek bakal selalu jadi orang pertama yang mendukung dan mempercayai mas, bahkan ketika seluruh dunia atau orang-orang di luar sana meragukan mas.
+
+I am, and will always be, your biggest cheerleader. I just want you to know how deeply appreciated you are. Mau bagaimanapun jalannya, sosok mas dan semua kebaikan yang pernah mas kasih bakal selalu punya tempat yang sangat spesial di hati adek.`
+            },
+            2: {
+                title: "Our Journey 🥂",
+                body: `Ga kerasa ya, perjalanan yang berawal dari ketidaksengajaan ini ternyata udah bertahan dan berkembang sejauh ini selama satu tahun penuh. 365 days of learning, growing, laughing, and loving each other. Terima kasih udah melengkapi satu tahun ini dengan sejuta rasa hangat, kebaikan, dan cinta yang ga pernah setengah-setengah. Adek bersyukur banget punya mas di hidup adek. Happy 1st anniversary to my favorite person, my safe space, and my sweet universe.
+
+Kalau dipikir-pikir lagi, awal cerita kita itu bener-bener hal paling tak terduga yang pernah terjadi di hidup adek. Kita ketemu di saat adek ga pernah menaruh ekspektasi apa-apa, cuma sekadar cari temen ngobrol di tengah rasa patah hati. Tapi semesta punya cara yang serandom sekaligus secantik itu buat menyatukan kita.
+
+Tanpa adek sadari, kehadiran mas yang tenang dan charming perlahan-lahan jadi obat paling alami. Hati adek yang tadinya luka bisa berpaling dan jatuh sejatuh-jatuhnya ke mas dalam waktu yang singkat banget. Mas hadir bukan cuma sebagai pasangan, tapi sebagai jawaban dan sosok terbaik yang dibimbing semesta buat bantu adek sembuh.
+
+Setelah dijalani sejauh ini, adek makin merasa kalau kita itu emang definisi nyata dari dua bintang biner yang saling mengorbit yang saling melengkapi sampai bisa bersinar makin terang bersama, kaya Sirius A dan B, bintang paling terang di langit malam. Rasanya kata 'cocok' aja bahkan terlalu sederhana buat menggambarkan perjalanan kita selama setahun kebelakang. Ada begitu banyak momen di mana kita berdiri di titik yang sangat setara; in values, in mind, and in how we see things. Adek selalu percaya kalau jodoh adalah cerminan dari value yang kita pegang, dan itu terpancar jelas banget di diri mas. Masih sering bikin senyum-senyum sendiri kalau inget gimana seringnya kita kepikiran hal yang sama, atau bahkan nyeplos kalimat yang persis sama di detik yang bersamaan. Intuisinya terlalu selaras buat sekadar disebut kebetulan. Bener-bener one brain cell, sejiwa, dan selangkah banget.
+
+Tentu perjalanan kita ga selalu mulus tanpa ombak. Kita melewati berbagai dinamika, penyesuaian, dan momen-momen yang menguji kedewasaan kita berdua. Tapi di antara semua fase naik turun itu, adek merasa extremely lucky dan bersyukur banget pernah ada di dalam hubungan ini sama mas. Rasa dicintai secara tulus, dihargai, dan diperlakukan dengan begitu hangat oleh mas adalah salah satu hal paling indah yang pernah adek punya.
+
+Hubungan ini ngajarin adek banyak banget hal tentang arti kedewasaan, kesabaran, dan ketulusan. Terima kasih ya mas, udah menciptakan jutaan kenangan manis dan cerita indah di hidup adek. Perjalanan cerita "kita" bakal selalu jadi bab favorit yang ga akan pernah adek sesali atau lupakan.`
+            }
+        };
+
+        function openLetter(id) {
+            document.getElementById('modal-title').innerText = letters[id].title;
+            document.getElementById('modal-body').innerText = letters[id].body;
+            document.getElementById('letter-modal').style.display = 'flex';
+        }
+
+        function closeLetter() {
+            document.getElementById('letter-modal').style.display = 'none';
+        }
+    </script>
+</body>
+</html>
