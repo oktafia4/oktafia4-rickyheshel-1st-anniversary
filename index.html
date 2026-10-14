@@ -44,7 +44,7 @@
             width: 100%;
             max-width: 520px;
             min-height: 100vh;
-            padding: 20px;
+            padding: 55px 20px 20px 20px; /* Padding atas ditambah agar tidak terhalang tombol musik */
             display: flex;
             flex-direction: column;
             justify-content: center;
@@ -87,22 +87,22 @@
             margin-bottom: 10px;
         }
 
-        /* Cute Music Button */
+        /* Cute Music Button - Ditinggikan & diperkecil sedikit agar tidak menutupi judul */
         .music-btn {
             position: fixed;
-            top: 15px;
-            right: 15px;
+            top: 10px;
+            right: 12px;
             background: #FFFFFF;
-            border: 2px solid var(--accent-gold);
-            padding: 8px 16px;
-            border-radius: 25px;
+            border: 1.8px solid var(--accent-gold);
+            padding: 6px 13px;
+            border-radius: 20px;
             display: flex;
             align-items: center;
-            gap: 8px;
+            gap: 6px;
             cursor: pointer;
-            box-shadow: 0 4px 12px var(--shadow-soft);
-            z-index: 100;
-            font-size: 0.85rem;
+            box-shadow: 0 4px 10px var(--shadow-soft);
+            z-index: 9999;
+            font-size: 0.8rem;
             font-weight: 600;
             color: var(--text-brown);
         }
@@ -212,7 +212,7 @@
         /* Page 4: Word Search Scrollable with Hint Above Grid */
         .ws-scroll-wrapper {
             width: 100%;
-            max-height: 85vh;
+            max-height: 80vh;
             overflow-y: auto;
             padding: 10px;
             display: flex;
@@ -363,7 +363,7 @@
         /* Page 6: Doodle Paper 50 Reasons (Auto-checked) */
         .doodle-paper-scroll {
             width: 100%;
-            max-height: 85vh;
+            max-height: 80vh;
             overflow-y: auto;
             padding: 10px;
             display: flex;
@@ -588,7 +588,7 @@
         <div id="page-3" class="page">
             <div id="bubble" class="bubble-text">hmmm bete nih... 🥺</div>
             <div class="pat-area" id="pat-area">
-                <img id="pat-img" class="pat-img" src="karikatur1.png" alt="Karikatur">
+                <img id="pat-img" class="pat-img" src="karikatur1.PNG" alt="Karikatur">
                 <div id="swipe-guide" class="swipe-guide" style="display:none;"><span>↔️</span> Gesek Rambutnya!</div>
             </div>
             <p id="pat-count-text">Klik dulu karikaturnya!</p>
@@ -716,7 +716,7 @@
                 </div>
 
                 <div class="polaroid-right">
-                    <img src="foto-polaroid.jpg" alt="Polaroid Memory">
+                    <img src="foto-polaroid.JPG" alt="Polaroid Memory">
                     <p style="font-family:'Caveat'; font-size:1.4rem; margin-top:8px; margin-bottom:0; text-align:center;">Us Forever 🤍</p>
                 </div>
             </div>
@@ -743,17 +743,24 @@
             if (isPlaying) {
                 bgm.pause();
                 document.getElementById('music-status').innerText = "Play Music";
+                document.getElementById('music-icon').innerText = "🎵";
             } else {
-                bgm.play();
-                document.getElementById('music-status').innerText = "Pause Music";
+                bgm.play().then(() => {
+                    document.getElementById('music-status').innerText = "Pause Music";
+                    document.getElementById('music-icon').innerText = "🎶";
+                }).catch(e => {
+                    console.log("Audio play blocked:", e);
+                });
             }
             isPlaying = !isPlaying;
         }
 
         function playDuckedSFX() {
-            bgm.volume = 0.2;
-            sfxWoah.play();
-            sfxWoah.onended = () => { bgm.volume = 1.0; };
+            if(isPlaying) {
+                bgm.volume = 0.2;
+                sfxWoah.play();
+                sfxWoah.onended = () => { bgm.volume = 1.0; };
+            }
         }
 
         function goToPage(pageNum) {
@@ -764,7 +771,14 @@
 
         // Loading Screen
         function startLoading() {
-            if(!isPlaying) toggleAudio();
+            if(!isPlaying) {
+                bgm.play().then(() => {
+                    isPlaying = true;
+                    document.getElementById('music-status').innerText = "Pause Music";
+                    document.getElementById('music-icon').innerText = "🎶";
+                }).catch(e => {});
+            }
+
             let bar = document.getElementById('p-bar');
             let text = document.getElementById('loading-text');
             let width = 0;
@@ -796,7 +810,7 @@
         patArea.addEventListener('click', () => {
             if(patStep === 1) {
                 patStep = 2;
-                patImg.src = 'karikatur2.png';
+                patImg.src = 'karikatur2.PNG';
                 bubble.innerText = "hmmm bete nih... gesek rambutku dong! 🥺";
                 patCountText.innerText = `Sesi ${currentSession}/3 (Gesek: 0/5)`;
                 swipeGuide.style.display = 'flex';
@@ -820,7 +834,7 @@
                 lastX = currentX;
                 patCountText.innerText = `Sesi ${currentSession}/3 (Gesek: ${swipeCount}/5)`;
 
-                patImg.src = 'karikatur2.png';
+                patImg.src = 'karikatur2.PNG';
 
                 if(swipeCount >= 5) {
                     isSwiping = false;
@@ -829,12 +843,12 @@
 
                     if(currentSession <= 3) {
                         bubble.innerText = "LAGIIIIIII 🥺";
-                        patImg.src = 'karikatur2.png';
+                        patImg.src = 'karikatur2.PNG';
                         patCountText.innerText = `Sesi ${currentSession}/3 (Gesek: 0/5)`;
                         if(swipeGuide) swipeGuide.style.display = 'flex';
                     } else {
                         patStep = 3;
-                        patImg.src = 'karikatur3.png';
+                        patImg.src = 'karikatur3.PNG';
                         bubble.innerText = "Yeay! Makasih mas! 🥰";
                         patCountText.innerText = "Sempurna! ✨";
                         document.getElementById('btn-pat-next').style.display = 'inline-block';
